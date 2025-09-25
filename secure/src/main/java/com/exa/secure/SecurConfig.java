@@ -12,6 +12,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurConfig {
 
+@Autowired
+private JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -22,6 +25,7 @@ public class SecurConfig {
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no sessions
+                .addFilterBefore(JwtFilter,UsernamePasswordAuthenticationFilter);
             )
             .httpBasic(httpBasic -> httpBasic.disable()) // disable Basic Auth
             .formLogin(form -> form.disable()); // disable form login

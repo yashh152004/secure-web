@@ -1,25 +1,22 @@
 package com.exa.secure.Service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {
 
- public String generateSecretKey() {
- try {
- KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
- SecretKey secretKey = keyGen.generateKey();
- System.out.println("Secret Key : " + secretKey.toString());
- return Base64.getEncoder().encodeToString(secretKey.getEncoded());
- } catch (NoSuchAlgorithmException e) {
- throw new RuntimeException("Error generating secret key", e);
- }
-}
- public String generateToken(String username) {
+
+ @SuppressWarnings("deprecation")
+public String generateToken(String username) {
  Map<String, Object> claims = new HashMap<>(); // Claims can include custom data (e.g., roles, permissions)
  claims.put("username", username); // Adding custom claim
 
@@ -32,13 +29,11 @@ public class JwtService {
  .compact(); // Generate the token
  }
 
- private java.security.Key getKey() {
-	 String secret = "your-256-bit-secret"; // Use a strong secret in production
-	 return io.jsonwebtoken.security.Keys.hmacShaKeyFor(secret.getBytes(java.nio.charset.StandardCharsets.UTF_8));
- }
+ @SuppressWarnings("FieldMayBeFinal")
+ private String secretKey="your-256-bit-secret";
  public Key getKey()
  {
 	byte[] getBytes =Decoders.BASE64.decode(secretKey);
-	return Keys=hmacShaKeyFor(KeyBytes)
+	return Keys.hmacShaKeyFor(getBytes);
  }
 }
